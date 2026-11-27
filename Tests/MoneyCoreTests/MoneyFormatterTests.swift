@@ -11,7 +11,6 @@ import Testing
 
 @Test
 func formatsEURUsingUSLocale() {
-    
     let formatter = MoneyFormatter(locale: Locale(identifier: "en_US"))
     let money = Money(amount: 1234.56, currency: .eur)
     let result = formatter.string(from: money)
@@ -44,4 +43,32 @@ func formatsKWDWithThreeFractionDigits() {
     let result = formatter.string(from: money)
 
     #expect(result.contains("12.345"))
+}
+
+@Test
+func formatsZeroAmount() {
+    let formatter = MoneyFormatter(locale: Locale(identifier: "en_US"))
+    let money = Money(amount: 0, currency: .eur)
+    let result = formatter.string(from: money)
+
+    #expect(result.contains("0.00"))
+}
+
+@Test
+func formatsNegativeAmount() {
+    let formatter = MoneyFormatter(locale: Locale(identifier: "en_US"))
+    let money = Money(amount: -1234.56, currency: .usd)
+    let result = formatter.string(from: money)
+
+    #expect(result.contains("-"))
+    #expect(result.contains("1,234.56"))
+}
+
+@Test
+func roundsToCurrencyMinorUnits() {
+    let formatter = MoneyFormatter(locale: Locale(identifier: "en_US"))
+    let money = Money(amount: 12.3456, currency: .kwd)
+    let result = formatter.string(from: money)
+
+    #expect(result.contains("12.346"))
 }
